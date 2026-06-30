@@ -15,6 +15,10 @@
 # If KERNELRELEASE is defined, we've been invoked from the
 # kernel build system and can use its language.
 ifneq ($(KERNELRELEASE),)
+    # Define and export AUTOCONF_H path for out-of-tree modules compiled in-tree
+    export AUTOCONF_H_DIR ?= $(srctree)/include/generated
+    export AUTOCONF_H ?= $(AUTOCONF_H_DIR)/autoconf.h
+
     subdir-ccflags-y += -I$(srctree)/
     subdir-ccflags-y += -I$(srctree)/drivers/misc/mediatek/base/power/include
     subdir-ccflags-y += -I$(srctree)/drivers/misc/mediatek/clkbuf/src
@@ -64,8 +68,6 @@ endif
     
     # WLAN Drivers sub-paths
     obj-y += wlan/adaptor/
-    # Note: fmradio usually has its own root Makefile, but if it fails, 
-    # check if it requires a sub-path target similar to BT.
     obj-y += fmradio/
     # =========================================================================
 
