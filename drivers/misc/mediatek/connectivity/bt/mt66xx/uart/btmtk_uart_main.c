@@ -73,12 +73,12 @@ static int btmtk_uart_send_query_uart_cmd(struct hci_dev *hdev)
 /* ------ LDISC part ------ */
 /* btmtk_uart_tty_open
  *
- *     Called when line discipline changed to HCI_UART.
+ * Called when line discipline changed to HCI_UART.
  *
  * Arguments:
- *     tty    pointer to tty info structure
+ * tty    pointer to tty info structure
  * Return Value:
- *     0 if success, otherwise error code
+ * 0 if success, otherwise error code
  */
 static int btmtk_uart_tty_open(struct tty_struct *tty)
 {
@@ -96,7 +96,7 @@ static int btmtk_uart_tty_open(struct tty_struct *tty)
 	/* Flush any pending characters in the driver and line discipline. */
 
 	/* FIXME: why is this needed. Note don't use ldisc_ref here as the
-	 *  open path is before the ldisc is referencable
+	 * open path is before the ldisc is referencable
 	 */
 
 	btmtk_allocate_hci_device(g_bdev, HCI_UART);
@@ -116,8 +116,8 @@ static int btmtk_uart_tty_open(struct tty_struct *tty)
 
 /* btmtk_uart_tty_close()
  *
- *    Called when the line discipline is changed to something
- *    else, the tty is closed, or the tty detects a hangup.
+ * Called when the line discipline is changed to something
+ * else, the tty is closed, or the tty detects a hangup.
  */
 static void btmtk_uart_tty_close(struct tty_struct *tty)
 {
@@ -155,14 +155,14 @@ static unsigned int btmtk_uart_tty_poll(struct tty_struct *tty, struct file *fil
 
 /* btmtk_uart_tty_ioctl()
  *
- *    Process IOCTL system call for the tty device.
+ * Process IOCTL system call for the tty device.
  *
  * Arguments:
  *
- *    tty        pointer to tty instance data
- *    file       pointer to open file object for device
- *    cmd        IOCTL command code
- *    arg        argument for IOCTL call (cmd dependent)
+ * tty        pointer to tty instance data
+ * file       pointer to open file object for device
+ * cmd        IOCTL command code
+ * arg        argument for IOCTL call (cmd dependent)
  *
  * Return Value:    Command dependent
  */
@@ -180,12 +180,12 @@ static int btmtk_uart_tty_ioctl(struct tty_struct *tty, struct file *file,
 		break;
 	case HCIUARTSETBAUD:
 		pr_info("<!!> Set BAUDRATE <!!>\n");
-		btmtk_uart_send_set_uart_cmd(g_bdev->hdev);
+		btmtk_uart_send_set_uart_cmd(g_bdev);
 		msleep(100);
 		return 1;
 	case HCIUARTSETWAKEUP:
 		pr_info("<!!> Send Wakeup <!!>\n");
-		btmtk_uart_send_wakeup_cmd(g_bdev->hdev);
+		btmtk_uart_send_wakeup_cmd(g_bdev);
 		pr_info("<!!> Send Wakeup done, then wait 200ms for uart sleep <!!>\n");
 		msleep(200);
 		return 1;
@@ -198,7 +198,8 @@ static int btmtk_uart_tty_ioctl(struct tty_struct *tty, struct file *file,
 		return 1;
 	case HCIUARTLOADPATCH:
 		pr_info("<!!> Set HCIUARTLOADPATCH command <!!>\n");
-		btmtk_load_rom_patch_766x(g_bdev->hdev);
+		/* FIXED: Passing core g_bdev struct instead of inner hdev pointer */
+		btmtk_load_rom_patch_766x(g_bdev);
 		return 1;
 	default:
 		/* pr_info("<!!> n_tty_ioctl_helper <!!>\n"); */
@@ -229,8 +230,8 @@ static void btmtk_uart_tty_receive(struct tty_struct *tty, const u8 *data, char 
 
 /* btmtk_uart_tty_wakeup()
  *
- *    Callback for transmit wakeup. Called when low level
- *    device driver can accept more send data.
+ * Callback for transmit wakeup. Called when low level
+ * device driver can accept more send data.
  *
  * Arguments:        tty    pointer to associated tty instance data
  * Return Value:    None
