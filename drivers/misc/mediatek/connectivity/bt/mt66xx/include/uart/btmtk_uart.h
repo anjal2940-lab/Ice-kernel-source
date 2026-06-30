@@ -7,7 +7,6 @@
 #define _BTMTK_UART_H_
 #include "btmtk_define.h"
 
-
 #include <linux/tty.h>
 #include <linux/tty_driver.h>
 #include <linux/serial.h>
@@ -23,6 +22,10 @@ struct mtk_stp_hdr {
 #define STP_HEADER_LEN	4
 #define STP_HEADER_CRC_LEN	2
 
+/* tx_state / rx_state bits definitions */
+#ifndef BTMTKUART_TX_SKIP_VENDOR_EVT
+#define BTMTKUART_TX_SKIP_VENDOR_EVT 0
+#endif
 
 struct btmtk_uart_dev {
 	struct hci_dev	   *hdev;
@@ -70,8 +73,5 @@ struct btmtk_uart_dev {
 #define RETRY_TIMES 10
 #define HCI_EV_VENDOR			0xff
 
-#define N_MTK        (15+1)
-
 int btmtk_cif_send_calibration(struct hci_dev *hdev);
 #endif
-
