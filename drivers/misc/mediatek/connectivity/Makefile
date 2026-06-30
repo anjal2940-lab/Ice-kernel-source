@@ -52,13 +52,20 @@ endif
 
     # =========================================================================
     # New Drivers Compilation Directives
-    # Descend into the folders to trigger their internal Makefiles
+    # Targets the specific paths containing internal Makefiles / Kbuilds
     # =========================================================================
     obj-y += conninfra/
     obj-y += connfem/
-    obj-y += wlan/
-    obj-y += bt/
     obj-y += gps/
+    
+    # BT Drivers sub-paths
+    obj-y += bt/mt66xx/
+    obj-y += bt/mt76xx/sdio/
+    
+    # WLAN Drivers sub-paths
+    obj-y += wlan/adaptor/
+    # Note: fmradio usually has its own root Makefile, but if it fails, 
+    # check if it requires a sub-path target similar to BT.
     obj-y += fmradio/
     # =========================================================================
 
@@ -119,4 +126,3 @@ else
 default:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
 endif
-
