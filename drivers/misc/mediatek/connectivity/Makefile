@@ -49,6 +49,19 @@ endif
     ifeq ($(CONFIG_MTK_COMBO), y)
         ccflags-y += -D CFG_CONNADP_BUILD_IN
     endif
+
+    # =========================================================================
+    # New Drivers Compilation Directives
+    # Descend into the folders to trigger their internal Makefiles
+    # =========================================================================
+    obj-y += conninfra/
+    obj-y += connfem/
+    obj-y += wlan/
+    obj-y += bt/
+    obj-y += gps/
+    obj-y += fmradio/
+    # =========================================================================
+
     # Do build-in for Makefile checking
     # export CONFIG_WLAN_DRV_BUILD_IN=y
 
@@ -106,3 +119,4 @@ else
 default:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
 endif
+
