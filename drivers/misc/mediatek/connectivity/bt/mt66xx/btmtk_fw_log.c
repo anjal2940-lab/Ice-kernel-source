@@ -17,6 +17,10 @@
  * - 0x03: Debug
  */
 
+/* Added fallback macro definitions to satisfy treating -Wundef as error build blocks */
+#ifndef FW_LOG_DEFAULT_ON
+#define FW_LOG_DEFAULT_ON 0
+#endif
 
 #if (FW_LOG_DEFAULT_ON == 0)
 	#define BT_FWLOG_DEFAULT_LEVEL 0x00
@@ -754,4 +758,3 @@ int btmtk_dispatch_fwlog(struct btmtk_dev *bdev, struct sk_buff *skb)
 	}
 	return 0;
 }
-
