@@ -83,5 +83,7 @@ struct btmtk_uart_dev {
 
 #define HCI_EV_VENDOR			0xff
 
-int btmtk_cif_send_calibration(struct hci_dev *hdev);
+/* Updated definition to fix structural type match conflict */
+struct btmtk_dev;
+int btmtk_cif_send_calibration(struct btmtk_dev *bdev);
 #endif
