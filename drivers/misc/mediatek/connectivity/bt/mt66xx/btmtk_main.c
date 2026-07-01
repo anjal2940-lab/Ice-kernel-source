@@ -33,7 +33,7 @@
 
 #include "btmtk_define.h"
 #include "btmtk_drv.h"
-#include "btmtk_config.h"
+#include "../mt76xx/sdio/btmtk_config.h"
 
 /* Added fallback macro definitions to satisfy treating -Wundef as error build blocks */
 #ifndef USE_DEVICE_NODE
