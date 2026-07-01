@@ -63,8 +63,8 @@ endif
     obj-y += gps/
     
     # BT Drivers sub-paths
-    obj-y += bt/mt66xx/
-    obj-y += bt/mt76xx/sdio/
+    # obj-y += bt/mt66xx/
+    # obj-y += bt/mt76xx/sdio/
     
     # WLAN Drivers sub-paths
     obj-y += wlan/adaptor/
