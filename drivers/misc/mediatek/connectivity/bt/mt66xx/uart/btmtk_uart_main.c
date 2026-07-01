@@ -35,7 +35,8 @@ static int btmtk_uart_allocate_memory(void)
 	return 0;
 }
 
-int btmtk_cif_send_calibration(struct hci_dev *hdev)
+/* Fixed: Argument modified to match its declaration in include/uart/btmtk_uart.h */
+int btmtk_cif_send_calibration(struct btmtk_dev *bdev)
 {
 	return 0;
 }
