@@ -14,8 +14,6 @@
 /*============================================================================*/
 static struct btmtk_dev *g_bdev;
 static struct tty_struct *g_tty_backup;
-static u8 local_stp_cursor = 2;
-static u16 local_stp_dlen = 0;
 
 /*============================================================================*/
 /* Function Prototype */
@@ -23,19 +21,6 @@ static u16 local_stp_dlen = 0;
 static int btmtk_uart_allocate_memory(void);
 
 unsigned long flagss;
-
-/* Stub functions for UART initialization targets */
-int btmtk_uart_send_set_uart_cmd(struct btmtk_dev *bdev)
-{
-	BTMTK_INFO("%s called", __func__);
-	return 0;
-}
-
-int btmtk_uart_send_wakeup_cmd(struct btmtk_dev *bdev)
-{
-	BTMTK_INFO("%s called", __func__);
-	return 0;
-}
 
 /* Allocate Uart-Related memory */
 static int btmtk_uart_allocate_memory(void)
@@ -101,8 +86,6 @@ static int btmtk_uart_tty_open(struct tty_struct *tty)
 	g_tty_backup = tty;
 
 	btmtk_allocate_hci_device(g_bdev, HCI_UART);
-	local_stp_cursor = 2;
-	local_stp_dlen = 0;
 
 	if (tty->ldisc->ops->flush_buffer)
 		tty->ldisc->ops->flush_buffer(tty);
@@ -159,14 +142,11 @@ static int btmtk_uart_tty_ioctl(struct tty_struct *tty, struct file *file,
 		tty->port->low_latency = 1;
 		break;
 	case HCIUARTSETBAUD:
-		pr_info("<!!> Set BAUDRATE <!!>\n");
-		btmtk_uart_send_set_uart_cmd(g_bdev);
+		pr_info("<!!> Set BAUDRATE bypass <!!>\n");
 		msleep(100);
 		return 1;
 	case HCIUARTSETWAKEUP:
-		pr_info("<!!> Send Wakeup <!!>\n");
-		btmtk_uart_send_wakeup_cmd(g_bdev);
-		pr_info("<!!> Send Wakeup done, then wait 200ms for uart sleep <!!>\n");
+		pr_info("<!!> Send Wakeup bypass <!!>\n");
 		msleep(200);
 		return 1;
 	case HCIUARTGETBAUD:
