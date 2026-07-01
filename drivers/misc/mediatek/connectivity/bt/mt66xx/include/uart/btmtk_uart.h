@@ -7,7 +7,6 @@
 #define _BTMTK_UART_H_
 #include "btmtk_define.h"
 
-
 #include <linux/tty.h>
 #include <linux/tty_driver.h>
 #include <linux/serial.h>
@@ -23,6 +22,10 @@ struct mtk_stp_hdr {
 #define STP_HEADER_LEN	4
 #define STP_HEADER_CRC_LEN	2
 
+/* tx_state / rx_state bits definitions */
+#ifndef BTMTKUART_TX_SKIP_VENDOR_EVT
+#define BTMTKUART_TX_SKIP_VENDOR_EVT 0
+#endif
 
 struct btmtk_uart_dev {
 	struct hci_dev	   *hdev;
@@ -50,12 +53,17 @@ struct btmtk_uart_dev {
 
 /**
  * Maximum rom patch file name length
+ * Overriding previous header definitions cleanly to bypass redefinition warnings
  */
-#define MAX_BIN_FILE_NAME_LEN 32
+#ifdef MAX_BIN_FILE_NAME_LEN
+#undef MAX_BIN_FILE_NAME_LEN
+#endif
+#define MAX_BIN_FILE_NAME_LEN 64
 
 #define N_MTK        (15+1)
+
 /**
- * Upper layeard IOCTL
+ * Upper layered IOCTL
  */
 #define HCIUARTSETPROTO _IOW('U', 200, int)
 #define HCIUARTSETBAUD _IOW('U', 201, int)
@@ -66,12 +74,14 @@ struct btmtk_uart_dev {
 
 /**
  * Send cmd dispatch evt
+ * Overriding previous header definitions cleanly to bypass redefinition warnings
  */
-#define RETRY_TIMES 10
-#define HCI_EV_VENDOR			0xff
+#ifdef RETRY_TIMES
+#undef RETRY_TIMES
+#endif
+#define RETRY_TIMES 20
 
-#define N_MTK        (15+1)
+#define HCI_EV_VENDOR			0xff
 
 int btmtk_cif_send_calibration(struct hci_dev *hdev);
 #endif
-

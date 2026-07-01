@@ -26,12 +26,6 @@ else
     ccflags-y += -DCFG_SUPPORT_DVT=0
 endif
 
-ifeq ($(CONFIG_SUPPORT_DVT), y)
-    ccflags-y += -DCFG_SUPPORT_DVT=1
-else
-    ccflags-y += -DCFG_SUPPORT_DVT=0
-endif
-
 ifeq ($(CONFIG_SUPPORT_MULTI_DEV_NODE), y)
     ccflags-y += -DCFG_SUPPORT_MULTI_DEV_NODE=1
 else
@@ -40,7 +34,8 @@ endif
 
 #################### Configurations ####################
 # For chip interface, driver supports "usb", "sdio", "uart" and "btif"
-MTK_CHIP_IF := usb
+# Changed from 'usb' to 'uart' to match MT6761 platform routing
+MTK_CHIP_IF := uart
 
 ifeq ($(MTK_CHIP_IF), sdio)
     MOD_NAME = btmtk_sdio_unify
@@ -71,24 +66,17 @@ ccflags-y += -I$(src)/include/ -I$(src)/
 
 $(MOD_NAME)-objs := $(CFILES:.c=.o)
 
-obj-m += $(MOD_NAME).o
+# Changed from obj-m to obj-y for in-tree kernel parsing
+obj-y += $(MOD_NAME).o
 
-
-#VPATH = /opt/toolchains/gcc-linaro-aarch64-linux-gnu-4.9-2014.09_linux
-#UART_MOD_NAME = btmtk_uart
-#UART_CFILES := \
-#	btmtk_uart_main.c
-#$(UART_MOD_NAME)-objs := $(UART_CFILES:.c=.o)
 ###############################################################################
-# Common
+# Common / Fallback Build Definitions
 ###############################################################################
-#obj-m := $(UART_MOD_NAME).o
 all:
 	make -C $(KERNEL_SRC) M=$(PWD) modules
 clean:
 	make -C $(KERNEL_SRC) M=$(PWD) clean
 # Check coding style
-# export IGNORE_CODING_STYLE_RULES := NEW_TYPEDEFS,LEADING_SPACE,CODE_INDENT,SUSPECT_CODE_INDENT
 ccs:
 	./util/checkpatch.pl -f ./sdio/btmtksdio.c
 	./util/checkpatch.pl -f ./include/sdio/btmtk_sdio.h
@@ -108,4 +96,3 @@ ccs:
 	./util/checkpatch.pl -f btmtk_buffer_mode.c
 	./util/checkpatch.pl -f btmtk_woble.c
 	./util/checkpatch.pl -f btmtk_chip_reset.c
-
